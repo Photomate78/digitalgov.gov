@@ -1,7 +1,7 @@
 <!-- Logic for featured image -->
 {{/* Featured_image call */}}
   {{ $cdnurl := .Site.Params.cdnurl }}
-  {{ $featImg := index $.Site.Data.images (default "digital-gov-card" .Params.featured_image.uid) }}
+  {{ $featImg := index $.Site.Data.images (default "digital-gov-card-2" .Params.featured_image.uid) }}
   {{ $featImgBase := $featImg.uid }}
   {{ $featImgExt := $featImg.format }}
   {{ $featImgBaseCDN := printf "%s/%s" $cdnurl $featImgBase }}
@@ -15,7 +15,6 @@
    {{ $.Scratch.Set "featImgTwitterSuffix" "_w800" }}
   {{ end }}
   {{ $featImgURL := printf "%s%s.%s" $featImgBaseCDN ($.Scratch.Get "featImgSuffix") $featImgExt }}
-  {{ $featImgTwitterURL := printf "%s%s.%s" $featImgBaseCDN ($.Scratch.Get "featImgTwitterSuffix") $featImgExt }}
 {{/* End featured_image call */}}
 
 <!-- Logic for Page Types -->
@@ -25,7 +24,6 @@
 {{ else }}
   {{ $.Scratch.Set "pagetype" "website" }}
 {{ end }}
-
 
 <html lang="en-US" itemscope itemtype="http://schema.org/WebSite" prefix="og: http://ogp.me/ns#">
 
@@ -52,26 +50,21 @@
   <meta property="og:description" content="{{ $.Params.summary | default $.Site.Params.description | markdownify }}">
   <meta property="og:type" content="{{ $.Scratch.Get "pagetype" }}">
   <meta property="og:url" content="{{ .Permalink }}" />
-  <meta property="og:image" content="{{ $featImgURL }}" />
-  <meta property="og:image" content="https://s3.amazonaws.com/digitalgov/tile-1.png" />
-  <meta property="og:image" content="https://s3.amazonaws.com/digitalgov/tile-2.png" />
-  <meta property="og:image:width" content="{{ $featImgWidth }}" />
   <meta property="og:site_name" content="DigitalGov">
+  {{ if $featImgURL }}<meta property="og:image" content="{{ $featImgURL }}" />{{ end }}
+  {{ if $.Params.youtube_id }}<meta property='og:video' content='https://www.youtube.com/v/{{ $.Params.youtube_id }}' />{{ end }}
   <meta property="fb:admins" content="100000569454928" />
   <meta property="article:publisher" content="https://www.facebook.com/digitalgov" />
-  <meta property="article:author" content="willsullivan" />
-  <meta property="article:published_time" content="2017-09-25T09:00:15Z" />
-  <meta property="article:modified_time" content="2017-09-25T09:00:15Z" />
+  {{ if $.Params.date }}<meta property="article:published_time" content="{{ $.Params.date }}" />{{ end }}
   {{ "<!-- End of Facebook Open Graph -->" | safeHTML }}
 
   {{ "<!-- Start of Twitter Card -->" | safeHTML }}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@Digital_Gov" />
   <meta name="twitter:creator" content="@Digital_Gov" />
+  {{ if $featImgURL }}<meta name="twitter:image:src" content="{{ $featImgURL }}">{{ end }}
   <meta property="twitter:description" content="{{ $.Params.summary | default $.Site.Params.description | markdownify }}">
   <meta property="twitter:title" content="{{ $.Params.title | default $.Site.Title | markdownify }}">
-  <meta property="twitter:image" content="{{ $featImgTwitterURL }}">
-  <meta itemprop="image" content="{{ $featImgURL }}" />
   {{ "<!-- End of Twitter -->" | safeHTML }}
 
   {{ "<!-- RSS Feed-->" | safeHTML }}
@@ -82,6 +75,21 @@
   {{ if .RSSLink }}
   <link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
   {{ end }}
+
+  {{ if $.Params.canonical }}
+  {{ "<!-- Canonical URL =============== -->" | safeHTML }}
+  <link rel="canonical" href="{{ $.Params.canonical }}" />
+  {{ end }}
+
+  {{ if $.Params.redirectto }}
+  {{ "<!-- Redirect =============== -->" | safeHTML }}
+  <meta http-equiv="refresh" content="0; url=$.Params.redirectto">
+  <script type="text/javascript">
+    window.location.href = "{{ $.Params.redirectto }}"
+  </script>
+  {{ end }}
+
+
 
   {{ "<!-- CSS -->" | safeHTML }}
   <link rel='stylesheet' href='{{ "css/widget.css" | absURL }}' type='text/css' media='all' />
@@ -96,7 +104,6 @@
   <link rel='stylesheet' href='{{ "css/style-responsive.css" | absURL }}' type='text/css' media='all' />
   <link rel='stylesheet' href='{{ "css/wpp.css" | absURL }}' type='text/css' media='all' />
   <link rel='stylesheet' href='{{ "css/shortcodes.css" | absURL }}' type='text/css' media='all' />
-  <link rel='stylesheet' href='{{ "css/custom.css" | absURL }}' type='text/css' media='all' />
   <link rel='stylesheet' href='{{ "css/style-front-end.css" | absURL }}' type='text/css' media='all' />
   <link rel='stylesheet' href='{{ "css/notice-bar.css" | absURL }}' type='text/css' media='all' />
   <link rel='stylesheet' href='{{ "css/tribe-events-full.min.css?ver=4.4.1.1" | absURL }}' type='text/css' media='all' />
@@ -105,6 +112,10 @@
   <link rel='stylesheet' href='{{ "lib/uswds/css/dg-uswds.min.css" | absURL }}' type='text/css' media='all' />
   <link rel="stylesheet" media="all" href="{{ "css/override.css" | absURL }}" type="text/css" />
   <link rel='stylesheet' href='{{ "css/federalist-additions.css" | absURL }}' type='text/css' media='all' />
+  <link rel='stylesheet' href='{{ "css/video.css" | absURL }}' type='text/css' media='all' />
+  <link rel='stylesheet' href='{{ "css/events.css" | absURL }}' type='text/css' media='all' />
+  <link rel='stylesheet' href='{{ "css/featured.css" | absURL }}' type='text/css' media='all' />
+  <link rel='stylesheet' href='{{ "css/custom.css" | absURL }}' type='text/css' media='all' />
 
   {{ if eq .Section "events" }}
   {{ "<!-- Add to Calendar CSS -->" | safeHTML }}
@@ -122,7 +133,7 @@
   <script type='text/javascript' src='{{ "js/flex-script-main.js" | absURL }}'></script>
 
   {{ "<!-- DAP — Digital Analytics Program | Learn more: https://digitalgov.gov/dap/ -->" | safeHTML }}
-  <script language="javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?ver=true&agency=GSA"></script>
+  <script language="javascript" id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?ver=true&agency=GSA{{ if (isset .Params "youtube_id") }}&yt=true{{ end }}"></script>
 
   {{ "<!-- Google Analytics — Global Site Tag (gtag.js) | because our site has been around a lot longer than DAP -->" | safeHTML }}
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47271808-1"></script>

@@ -19,6 +19,9 @@ Add styles beneath this line that you want to be applied across your entire site
 	max-width: 250px;
 }
 
+.hidden{
+	display: none;
+}
 
 /* DESKTOP ONLY STYLES
 ---------------------------------------------------------------------------------
