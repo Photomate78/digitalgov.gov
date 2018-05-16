@@ -13,6 +13,9 @@ event_organizer: DigitalGov University
 host: 
 registration_url: https://www.eventbrite.com/e/searchgov-advanced-technical-registration-45389884366
 youtube_id: THhe3Z7XSxg
+aliases:
+  - /event/2018/05/30/how-search-engines-index-your-websites/
+  - /event/2018/05/10/how-search-engines-index-your-websites/
 
 ---
 
